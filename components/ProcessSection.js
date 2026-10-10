@@ -131,10 +131,6 @@ export default function ProcessSection() {
     >
       {/* Section Header */}
       <div style={{ textAlign: "center", marginBottom: "clamp(40px, 6vw, 80px)" }}>
-        <div className="section-pill">
-          <span className="section-pill-dot" />
-          HOW WE WORK
-        </div>
         <RevealHeading
           className="font-heading section-title"
           parts={[{ text: "From First Idea To " }, { text: "Live Product.", className: "gold-text-gradient" }]}

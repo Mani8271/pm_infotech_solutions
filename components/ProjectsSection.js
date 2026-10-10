@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import RevealHeading from "@/components/RevealHeading";
 import { useInView } from "@/lib/useInView";
+import { useSwipeCarousel } from "@/lib/useSwipeCarousel";
 
 // PLACEHOLDER CONTENT: replace every project below with real work (title, client industry,
 // what you built, the measurable result, the stack, and a real screenshot as `image`).
@@ -54,6 +55,7 @@ function handleTiltLeave(e) {
 export default function ProjectsSection() {
   const gridRef = useRef(null);
   const inView = useInView(gridRef, { threshold: 0.15 });
+  const { active, scrollToIndex } = useSwipeCarousel(gridRef); // Swipe carousel on phones
 
   return (
     <section
@@ -67,10 +69,6 @@ export default function ProjectsSection() {
     >
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "clamp(36px, 5vw, 60px)" }}>
-        <div className="section-pill">
-          <span className="section-pill-dot" />
-          FEATURED WORK
-        </div>
         <RevealHeading
           className="font-heading section-title"
           parts={[{ text: "Projects That " }, { text: "Speak For Us.", className: "gold-text-gradient" }]}
@@ -110,6 +108,20 @@ export default function ProjectsSection() {
               </div>
             </article>
           </div>
+        ))}
+      </div>
+
+      {/* Carousel position dots (phones only) */}
+      <div className="carousel-dots">
+        {projects.map((project, i) => (
+          <button
+            key={project.title}
+            type="button"
+            className={`carousel-dot ${i === active ? "is-active" : ""}`}
+            aria-label={`Show ${project.title}`}
+            aria-current={i === active || undefined}
+            onClick={() => scrollToIndex(i)}
+          />
         ))}
       </div>
     </section>

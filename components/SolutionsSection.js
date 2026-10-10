@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import RevealHeading from "@/components/RevealHeading";
 import { useInView } from "@/lib/useInView";
+import { useSwipeCarousel } from "@/lib/useSwipeCarousel";
 
 const solutions = [
   {
@@ -95,6 +96,7 @@ function handleGridPointerMove(e) {
 export default function SolutionsSection() {
   const gridRef = useRef(null);
   const inView = useInView(gridRef, { threshold: 0.15 });
+  const { active, scrollToIndex } = useSwipeCarousel(gridRef); // Swipe carousel on phones
 
   return (
     <section
@@ -170,6 +172,20 @@ export default function SolutionsSection() {
               </div>
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Carousel position dots (phones only) */}
+      <div className="carousel-dots">
+        {solutions.map((item, i) => (
+          <button
+            key={item.num}
+            type="button"
+            className={`carousel-dot ${i === active ? "is-active" : ""}`}
+            aria-label={`Show ${item.title}`}
+            aria-current={i === active || undefined}
+            onClick={() => scrollToIndex(i)}
+          />
         ))}
       </div>
     </section>

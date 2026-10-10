@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { setScrollLocked } from "@/lib/smoothScroll";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -52,6 +53,29 @@ export default function Navbar() {
       if (frame !== null) cancelAnimationFrame(frame);
     };
   }, []);
+
+  // Full-screen mobile menu: freeze the page behind it, close on Escape, and close if the
+  // screen becomes wide enough for the desktop links
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    setScrollLocked(true);
+    const onKey = (e) => e.key === "Escape" && setMobileMenuOpen(false);
+    const wide = window.matchMedia("(min-width: 1025px)");
+    const onWide = () => wide.matches && setMobileMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    wide.addEventListener("change", onWide);
+    return () => {
+      setScrollLocked(false);
+      window.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
+    };
+  }, [mobileMenuOpen]);
+
+  // Unlock scrolling right away (not after re-render) so the link's smooth scroll can run
+  function closeMenu() {
+    setScrollLocked(false);
+    setMobileMenuOpen(false);
+  }
 
   // Slide the glass pill under the active link
   useLayoutEffect(() => {
@@ -283,51 +307,44 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Glass Menu Drawer */}
-      {mobileMenuOpen && (
-        <div
-          className="reference-glass-navbar-scrolled"
-          style={{
-            position: "absolute",
-            top: "calc(100% + 10px)",
-            left: "clamp(12px, 3vw, 24px)",
-            right: "clamp(12px, 3vw, 24px)",
-            borderRadius: "20px",
-            padding: "16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-            pointerEvents: "auto",
-            zIndex: 99999,
-          }}
-        >
-          {navLinks.map((link) => (
+      {/* Full-screen mobile menu: reveals in a circle from the ☰ button; links slide in one by one */}
+      <div
+        className={`mobile-menu ${mobileMenuOpen ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        inert={!mobileMenuOpen || undefined}
+      >
+        <nav className="mobile-menu-links">
+          {navLinks.map((link, i) => (
             <a
               key={link.name}
               href={link.href}
+              className={`mobile-menu-link ${activeLink === link.name ? "is-active" : ""}`}
+              style={{ "--i": i }}
               onClick={() => {
                 setActiveLink(link.name);
-                setMobileMenuOpen(false);
-              }}
-              style={{
-                padding: "12px 18px",
-                borderRadius: "12px",
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "var(--text-main)",
-                textDecoration: "none",
-                backgroundColor:
-                  activeLink === link.name ? "rgba(255, 255, 255, 0.18)" : "transparent",
-                minHeight: "44px",
-                display: "flex",
-                alignItems: "center",
+                closeMenu();
               }}
             >
-              {link.name}
+              <span className="mobile-menu-num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="mobile-menu-label">{link.name}</span>
+              <span className="mobile-menu-arrow" aria-hidden="true">
+                →
+              </span>
             </a>
           ))}
+        </nav>
+
+        <div className="mobile-menu-footer" style={{ "--i": navLinks.length }}>
+          <a href="#contact" className="mobile-menu-cta" onClick={closeMenu}>
+            Let's Talk →
+          </a>
+          <a href="mailto:contact@pminfotechsolutions.com" className="mobile-menu-email">
+            contact@pminfotechsolutions.com
+          </a>
         </div>
-      )}
+      </div>
     </header>
   );
 }

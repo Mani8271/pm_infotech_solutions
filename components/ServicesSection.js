@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import RevealHeading from "@/components/RevealHeading";
+import { useSwipeHint } from "@/lib/useSwipeCarousel";
 
 const metrics = [
   { value: "99.99%", label: "Uptime Architecture" },
@@ -226,6 +227,8 @@ export default function ServicesSection() {
   const isDownRef = useRef(true);
   const coverFrameRef = useRef(null);
 
+  useSwipeHint(gridRef, carousel);
+
   useEffect(() => {
     const mq = window.matchMedia(CAROUSEL_QUERY);
     const update = () => setCarousel(mq.matches);
@@ -383,42 +386,6 @@ export default function ServicesSection() {
     >
       {/* Section Top Header */}
       <div style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 50px)" }}>
-        {/* Top Gold Pill Tag */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "6px 18px",
-            borderRadius: "9999px",
-            backgroundColor: "rgba(20, 20, 24, 0.8)",
-            border: "1px solid rgba(212, 175, 55, 0.4)",
-            boxShadow: "0 0 16px rgba(212, 175, 55, 0.15)",
-            marginBottom: "16px",
-          }}
-        >
-          <span
-            style={{
-              width: "6px",
-              height: "6px",
-              borderRadius: "50%",
-              backgroundColor: "var(--gold-main)",
-              boxShadow: "0 0 8px var(--gold-main)",
-            }}
-          />
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 800,
-              letterSpacing: "0.18em",
-              color: "var(--gold-main)",
-              textTransform: "uppercase",
-            }}
-          >
-            ENTERPRISE CAPABILITIES
-          </span>
-        </div>
-
         {/* Main Section Title */}
         <RevealHeading
           className="font-heading"
@@ -562,12 +529,12 @@ export default function ServicesSection() {
       </div>
 
       {/* Carousel position dots (mobile only) */}
-      <div className="svc-dots">
+      <div className="carousel-dots">
         {services.map((service, i) => (
           <button
             key={service.id}
             type="button"
-            className={`svc-dot ${i === activeIndex ? "is-active" : ""}`}
+            className={`carousel-dot ${i === activeIndex ? "is-active" : ""}`}
             aria-label={`Show ${service.title}`}
             aria-current={i === activeIndex || undefined}
             onClick={() => scrollToSlide(i)}

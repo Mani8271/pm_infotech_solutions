@@ -16,11 +16,13 @@ import SmoothScroll from "@/components/SmoothScroll";
 import ScrollProgress from "@/components/ScrollProgress";
 import GoldCursor from "@/components/GoldCursor";
 import MagneticButtons from "@/components/MagneticButtons";
+import MobileCtaBar from "@/components/MobileCtaBar";
 
 const TOTAL_FRAMES = 240;
 const HERO_SCROLL_HEIGHT = 2200; // Height of the scroll track that scrubs through the frames
 const PRELOAD_STEP = 8; // Preloader only waits for every 8th frame; the rest stream in afterwards
 const LOAD_CONCURRENCY = 6;
+const PHONE_MAX_WIDTH = 767; // Matches the phone breakpoint in globals.css
 
 function getFrameSrc(index) {
   const paddedIndex = String(index).padStart(3, "0");
@@ -47,6 +49,7 @@ function buildLoadOrder() {
 
 export default function Home() {
   const canvasRef = useRef(null);
+  const heroContentRef = useRef(null); // Phones draw the laptop below this text block
   const [loadProgress, setLoadProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [animated, setAnimated] = useState(false);
@@ -105,6 +108,7 @@ export default function Home() {
       const imgRatio = imgWidth / imgHeight;
 
       let renderW, renderH, renderX, renderY;
+      let fadeTopEdge = false;
 
       if (window.innerWidth > 1024) {
         // Desktop: Scaled down & positioned on the right side
@@ -112,6 +116,25 @@ export default function Home() {
         renderW = renderH * imgRatio;
         renderX = cWidth - renderW + 50;
         renderY = (cHeight - renderH) / 2;
+      } else if (window.innerWidth <= PHONE_MAX_WIDTH) {
+        // Phones: the text sits at the top of the screen, so the laptop plays in the space
+        // below it, zoomed in so the laptop in the middle of the frame fills the width
+        const cssToCanvas = cHeight / canvas.clientHeight;
+        const content = heroContentRef.current;
+        const textBottom = content
+          ? (content.getBoundingClientRect().bottom - canvas.getBoundingClientRect().top + 12) * cssToCanvas
+          : cHeight * 0.55;
+        const space = cHeight - textBottom;
+        renderW = cWidth * 1.7;
+        renderH = renderW / imgRatio;
+        if (renderH > space) {
+          // Short screens: shrink to fit, but keep the laptop a decent size
+          renderH = Math.max(space, cHeight * 0.34);
+          renderW = renderH * imgRatio;
+        }
+        renderX = (cWidth - renderW) / 2;
+        renderY = cHeight - renderH;
+        fadeTopEdge = true;
       } else {
         // Mobile / Tablet: Centered cover
         const containerRatio = cWidth / cHeight;
@@ -132,6 +155,16 @@ export default function Home() {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "medium";
       ctx.drawImage(img, renderX, renderY, renderW, renderH);
+
+      if (fadeTopEdge) {
+        // Melt the top edge of the frame into the black so there's no hard line under the text
+        const fadeHeight = renderH * 0.35;
+        const fade = ctx.createLinearGradient(0, renderY, 0, renderY + fadeHeight);
+        fade.addColorStop(0, "rgba(0, 0, 0, 1)");
+        fade.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = fade;
+        ctx.fillRect(0, renderY, cWidth, fadeHeight);
+      }
     }
 
     // Frames stream in out of order, so fall back to the closest frame that has loaded
@@ -230,6 +263,10 @@ export default function Home() {
 
     resizeCanvas();
     handleScroll();
+    // On phones the laptop sits under the text, whose height changes once the web fonts load
+    document.fonts?.ready.then(() => {
+      if (!cancelled) renderFrame(currentFrameRef.current, true);
+    });
 
     return () => {
       cancelled = true;
@@ -349,6 +386,7 @@ export default function Home() {
 
           {/* Layer 1: Dark Cinematic Overlay & Warm Gold Radial Glow */}
           <div
+            className="hero-overlay"
             style={{
               position: "absolute",
               inset: 0,
@@ -363,6 +401,7 @@ export default function Home() {
 
           {/* Clean Hero Section Main Content Overlay (Layer 3) */}
           <div
+            className="hero-layer"
             style={{
               position: "absolute",
               inset: 0,
@@ -374,6 +413,7 @@ export default function Home() {
             }}
           >
             <div
+              ref={heroContentRef}
               className={`hero-content-left ${animated ? "is-active" : ""}`}
               style={{
                 maxWidth: "min(100%, 720px)",
@@ -427,6 +467,7 @@ export default function Home() {
 
               {/* Hero Action Buttons */}
               <div
+                className="hero-actions"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -486,6 +527,9 @@ export default function Home() {
       <TechStackSection />
       <ContactSection />
       <Footer />
+
+      {/* Phones only: sticky "Let's Talk" bar */}
+      <MobileCtaBar />
     </div>
   );
 }

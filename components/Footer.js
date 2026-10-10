@@ -2,10 +2,22 @@
 
 import { useEffect, useRef } from "react";
 import { scrollToTarget } from "@/lib/smoothScroll";
+import { site } from "@/lib/site";
 
 // X and GitHub marks from Simple Icons v16.34.0 (CC0). LinkedIn isn't in Simple Icons any
-// more, so it is drawn from basic shapes; the globe is a line icon like the rest of the site.
+// more, so it is drawn from basic shapes; Instagram and the globe are line icons like the rest of the site.
 const socials = [
+  {
+    label: "Instagram",
+    href: site.instagram,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+    ),
+  },
   {
     label: "LinkedIn",
     icon: (
@@ -58,7 +70,8 @@ const lineIcon = {
 
 const footerContacts = [
   {
-    text: "contact@pminfotechsolutions.com",
+    text: site.email,
+    href: `mailto:${site.email}`,
     icon: (
       <svg {...lineIcon}>
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -67,7 +80,8 @@ const footerContacts = [
     ),
   },
   {
-    text: "+1 (800) 582-9471",
+    text: site.phoneDisplay,
+    href: `tel:${site.telephone.replace(/-/g, "")}`,
     icon: (
       <svg {...lineIcon}>
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -75,7 +89,7 @@ const footerContacts = [
     ),
   },
   {
-    text: "San Jose • Bangalore • London",
+    text: "Visakhapatnam (Vizag), Andhra Pradesh, India",
     icon: (
       <svg {...lineIcon}>
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -199,7 +213,13 @@ export default function Footer() {
             {/* Social Icons */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               {socials.map((social) => (
-                <a key={social.label} href="#" className="footer-social" aria-label={social.label}>
+                <a
+                  key={social.label}
+                  href={social.href ?? "#"}
+                  {...(social.href && { target: "_blank", rel: "noopener noreferrer" })}
+                  className="footer-social"
+                  aria-label={social.label}
+                >
                   {social.icon}
                 </a>
               ))}
@@ -229,7 +249,13 @@ export default function Footer() {
               {footerContacts.map((item) => (
                 <div key={item.text} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span style={{ color: "var(--gold-main)", display: "flex", flexShrink: 0 }}>{item.icon}</span>
-                  {item.text}
+                  {item.href ? (
+                    <a href={item.href} className="footer-link">
+                      {item.text}
+                    </a>
+                  ) : (
+                    item.text
+                  )}
                 </div>
               ))}
             </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import RevealHeading from "@/components/RevealHeading";
+import { site } from "@/lib/site";
 
 const iconProps = {
   width: 18,
@@ -50,9 +51,9 @@ const ShieldIcon = (props) => (
 );
 
 const contactDetails = [
-  { label: "EXECUTIVE EMAIL", value: "contact@pminfotechsolutions.com", icon: <MailIcon /> },
-  { label: "DIRECT TOLL-FREE", value: "+1 (800) 582-9471", note: "Intl: +91 (80) 4122-8900", icon: <PhoneIcon /> },
-  { label: "PRIMARY TECH HUBS", value: "San Jose, CA • Bangalore, India • London, UK", icon: <PinIcon /> },
+  { label: "EXECUTIVE EMAIL", value: site.email, href: `mailto:${site.email}`, icon: <MailIcon /> },
+  { label: "DIRECT LINE", value: site.phoneDisplay, href: `tel:${site.telephone.replace(/-/g, "")}`, icon: <PhoneIcon /> },
+  { label: "OFFICE LOCATION", value: "Visakhapatnam (Vizag)", note: "Andhra Pradesh, India", icon: <PinIcon /> },
 ];
 
 export default function ContactSection() {
@@ -76,41 +77,6 @@ export default function ContactSection() {
     >
       {/* Top Header */}
       <div style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 50px)" }}>
-        {/* Top Gold Pill Tag */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "6px 18px",
-            borderRadius: "9999px",
-            backgroundColor: "rgba(20, 20, 26, 0.8)",
-            border: "1px solid rgba(212, 175, 55, 0.4)",
-            marginBottom: "16px",
-          }}
-        >
-          <span
-            style={{
-              width: "6px",
-              height: "6px",
-              borderRadius: "50%",
-              backgroundColor: "var(--gold-main)",
-              boxShadow: "0 0 8px var(--gold-main)",
-            }}
-          />
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 800,
-              letterSpacing: "0.18em",
-              color: "var(--gold-main)",
-              textTransform: "uppercase",
-            }}
-          >
-            DIRECT ENGAGEMENT
-          </span>
-        </div>
-
         {/* Title */}
         <RevealHeading
           className="font-heading"
@@ -193,7 +159,13 @@ export default function ContactSection() {
                         wordBreak: "break-word",
                       }}
                     >
-                      {detail.value}
+                      {detail.href ? (
+                        <a href={detail.href} style={{ color: "inherit", textDecoration: "none" }}>
+                          {detail.value}
+                        </a>
+                      ) : (
+                        detail.value
+                      )}
                     </div>
                     {detail.note && (
                       <div style={{ fontSize: "11.5px", color: "var(--text-subtle)", marginTop: "2px" }}>

@@ -12,14 +12,24 @@ export default function GoldCursor() {
   const dotRef = useRef(null);
 
   useEffect(() => {
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!finePointer || reduceMotion) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ring = ringRef.current;
     const dot = dotRef.current;
     const root = document.documentElement;
-    root.classList.add("has-gold-cursor");
+
+    // Only with a real mouse. This is re-checked when the device changes (for example
+    // DevTools switching to phone mode), so the ring never sticks around on touch screens.
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    function syncPointerType() {
+      if (finePointer.matches) {
+        root.classList.add("has-gold-cursor");
+      } else {
+        root.classList.remove("has-gold-cursor", "cursor-visible", "cursor-hover", "cursor-text", "cursor-down");
+      }
+    }
+    syncPointerType();
+    finePointer.addEventListener("change", syncPointerType);
 
     let mouseX = -100;
     let mouseY = -100;
@@ -36,7 +46,10 @@ export default function GoldCursor() {
     }
 
     function onMove(e) {
-      if (e.pointerType !== "mouse") return;
+      if (e.pointerType !== "mouse" || !finePointer.matches) {
+        root.classList.remove("cursor-visible");
+        return;
+      }
       mouseX = e.clientX;
       mouseY = e.clientY;
       dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
@@ -56,6 +69,7 @@ export default function GoldCursor() {
     document.addEventListener("mouseleave", onLeave);
 
     return () => {
+      finePointer.removeEventListener("change", syncPointerType);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointerup", onUp);

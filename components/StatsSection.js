@@ -66,13 +66,7 @@ export default function StatsSection() {
         zIndex: 4,
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
-          gap: "clamp(14px, 2vw, 24px)",
-        }}
-      >
+      <div className="stats-grid">
         {stats.map((stat, idx) => (
           <div key={stat.label} className="stat-card" style={{ "--i": idx }}>
             <div className="gold-text-gradient font-heading stat-number">

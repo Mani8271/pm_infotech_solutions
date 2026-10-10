@@ -451,33 +451,6 @@ export default function TechStackSection() {
         <GoldParticles />
 
         <div style={{ position: "relative", zIndex: 1 }}>
-          {/* Top Gold Pill */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "6px 18px",
-              borderRadius: "9999px",
-              backgroundColor: "rgba(20, 20, 26, 0.8)",
-              border: "1px solid rgba(212, 175, 55, 0.4)",
-              marginBottom: "20px",
-            }}
-          >
-            <span style={{ color: "var(--gold-main)", fontSize: "12px" }}>✦</span>
-            <span
-              style={{
-                fontSize: "11px",
-                fontWeight: 800,
-                letterSpacing: "0.18em",
-                color: "var(--gold-main)",
-                textTransform: "uppercase",
-              }}
-            >
-              STRATEGIC PARTNERSHIP
-            </span>
-          </div>
-
           {/* Banner Headline */}
           <RevealHeading
             as="h3"

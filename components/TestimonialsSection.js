@@ -61,10 +61,6 @@ export default function TestimonialsSection() {
     >
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "clamp(32px, 5vw, 50px)" }}>
-        <div className="section-pill">
-          <span className="section-pill-dot" />
-          CLIENTS
-        </div>
         <RevealHeading
           className="font-heading section-title"
           parts={[{ text: "Trusted By Teams " }, { text: "Who Ship.", className: "gold-text-gradient" }]}
