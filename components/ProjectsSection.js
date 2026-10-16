@@ -5,36 +5,37 @@ import RevealHeading from "@/components/RevealHeading";
 import { useInView } from "@/lib/useInView";
 import { useSwipeCarousel } from "@/lib/useSwipeCarousel";
 
-// PLACEHOLDER CONTENT: replace every project below with real work (title, client industry,
-// what you built, the measurable result, the stack, and a real screenshot as `image`).
-// While `sample` is true the card shows a "Sample" badge so it can't go live by accident.
+// Real client work. `url` adds a "Visit live site" link; `imagePosition: "top"` keeps a
+// website screenshot's header in view when the card crops it.
+// Set `sample: true` on a placeholder card and it shows a "Sample" badge so it can't go live by accident.
 const projects = [
   {
-    title: "Your Flagship Project",
-    category: "INDUSTRY · PLATFORM TYPE",
-    desc: "Two or three lines on the client's challenge, what your team built, and the outcome it delivered.",
-    result: "Key result, e.g. +40% conversions",
-    tags: ["Next.js", "Node.js", "AWS"],
-    image: "/cards_1/card_web.webp",
-    sample: true,
+    title: "Manasho",
+    category: "E-COMMERCE · DIRECT SELLING",
+    desc: "Online store and entrepreneur platform: product catalogue, cart, secure checkout, member registration and a downloadable business plan.",
+    result: "Live at manasho.in",
+    tags: ["React", "Redux", "Node.js", "Razorpay"],
+    image: "/projects/manasho.webp",
+    imagePosition: "left top",
+    url: "https://manasho.in",
   },
   {
-    title: "Second Project Name",
-    category: "INDUSTRY · MOBILE APP",
-    desc: "Describe the problem, your solution and the measurable impact for the client.",
-    result: "Key result",
-    tags: ["Flutter", "Firebase"],
-    image: "/cards_1/card_ai.webp",
-    sample: true,
+    title: "SUN Distributors",
+    category: "E-COMMERCE · DIRECT SELLING",
+    desc: "Multi-category online store for SUN Distributors Pvt. Ltd. (garments, pharmacy, electronics, beauty care and more) with cart, online payments and a business-partner portal.",
+    result: "8 product categories",
+    tags: ["React", "Redux", "Node.js", "Razorpay"],
+    image: "/projects/mysun.webp",
+    imagePosition: "top",
+    url: "https://mysun.in",
   },
   {
-    title: "Third Project Name",
-    category: "INDUSTRY · CLOUD",
-    desc: "Describe the problem, your solution and the measurable impact for the client.",
-    result: "Key result",
-    tags: ["Docker", "Azure"],
-    image: "/cards_1/card_cloud.webp",
-    sample: true,
+    title: "Hotel Marina Grand",
+    category: "HOSPITALITY · HOTEL MANAGEMENT SOFTWARE",
+    desc: "Front-desk software for daily hotel operations: bookings, check-in and check-out, guest records, billing and invoices, OTA commissions, maintenance and Excel reports.",
+    result: "Check-in to invoice",
+    tags: ["Laravel", "PHP", "MySQL"],
+    image: "/cards_1/card_software.webp",
   },
 ];
 
@@ -88,7 +89,14 @@ export default function ProjectsSection() {
           >
             <article className="proj-card" onPointerMove={handleTiltMove} onPointerLeave={handleTiltLeave}>
               <div className="proj-media">
-                <img src={project.image} alt="" loading="lazy" decoding="async" className="proj-img" />
+                <img
+                  src={project.image}
+                  alt={project.url ? `${project.title} website` : ""}
+                  loading="lazy"
+                  decoding="async"
+                  className="proj-img"
+                  style={project.imagePosition ? { objectPosition: project.imagePosition } : undefined}
+                />
                 <div className="proj-media-shade" />
                 <span className="proj-result">{project.result}</span>
               </div>
@@ -105,6 +113,11 @@ export default function ProjectsSection() {
                     </span>
                   ))}
                 </div>
+                {project.url && (
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="proj-link">
+                    Visit live site <span aria-hidden="true">↗</span>
+                  </a>
+                )}
               </div>
             </article>
           </div>

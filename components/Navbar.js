@@ -229,6 +229,7 @@ export default function Navbar() {
           <a
             href="#contact"
             data-magnetic
+            className="nav-cta"
             style={{
               padding: "8px clamp(14px, 1.5vw, 22px)",
               borderRadius: "9999px",

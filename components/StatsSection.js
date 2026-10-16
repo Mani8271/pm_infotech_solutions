@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 import { useInView } from "@/lib/useInView";
 
 const stats = [
-  { number: "150+", label: "Enterprise Projects Delivered", detail: "Global Fortune 500 & High-Growth Scaleups" },
-  { number: "99.99%", label: "Sub-Second Performance SLA", detail: "Ultra-low Latency Architecture" },
-  { number: "50M+", label: "Monthly Active Users", detail: "Handled seamlessly across platforms" },
-  { number: "15+", label: "Global Industry Awards", detail: "Awwwards, FWA & RedDot recognized" },
+  { number: "8", label: "Core Services", detail: "Web, Mobile, Custom Software, Cloud & AI" },
+  { number: "14+", label: "Modern Technologies", detail: "React, Node.js, Flutter, AWS & more" },
+  { number: "100%", label: "Source Code Ownership", detail: "Your code & IP, handed over at launch" },
+  { number: "24h", label: "Response Time", detail: "A clear reply to every enquiry within a day" },
 ];
 
 const COUNT_MS = 1800;

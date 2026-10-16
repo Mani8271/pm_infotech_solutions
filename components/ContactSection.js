@@ -326,19 +326,7 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              {/* Row 3: Target Project Scope / Budget */}
-              <div className="field">
-                <select id="contact-budget" name="budget" className="field-input field-select">
-                  <option value="$50,000 - $150,000">$50,000 - $150,000 (Production Release)</option>
-                  <option value="$150,000 - $500,000">$150,000 - $500,000 (Enterprise Solution)</option>
-                  <option value="$500,000+">$500,000+ (Global Infrastructure Pivot)</option>
-                </select>
-                <label htmlFor="contact-budget" className="field-label is-raised">
-                  Target Project Scope / Budget
-                </label>
-              </div>
-
-              {/* Row 4: Project Overview Textarea */}
+              {/* Row 3: Project Overview Textarea */}
               <div className="field">
                 <textarea
                   required

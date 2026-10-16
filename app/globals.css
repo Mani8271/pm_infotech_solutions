@@ -257,6 +257,13 @@ h1, h2, h3, .font-heading {
   }
 }
 
+/* Phones: header "Let's Talk" is hidden (the sticky bar and menu already offer it) */
+@media (max-width: 767px) {
+  .nav-cta {
+    display: none !important;
+  }
+}
+
 @media (max-width: 1024px) {
   .desktop-nav {
     display: none !important;
@@ -2377,6 +2384,24 @@ h1, h2, h3, .font-heading {
   color: var(--gold-light);
   background: rgba(212, 175, 55, 0.1);
   border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.proj-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-light);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.proj-link:hover {
+  color: #FFFFFF;
+  border-color: var(--gold-light);
 }
 
 @media (hover: hover) {
